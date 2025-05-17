@@ -1,47 +1,66 @@
 class VigenereCipher {
-  static String encrypt(String plaintext, String key) {
-    StringBuffer ciphertext = StringBuffer();
-    int keyIndex = 0;
-    
-    for (int i = 0; i < plaintext.length; i++) {
-      int charCode = plaintext.codeUnitAt(i);
-      if (charCode >= 65 && charCode <= 90) { // Uppercase letters
-        ciphertext.writeCharCode(
-          ((charCode - 65 + key[keyIndex % key.length].toUpperCase().codeUnitAt(0) - 65) % 26) + 65
-        );
-        keyIndex++;
-      } else if (charCode >= 97 && charCode <= 122) { // Lowercase letters
-        ciphertext.writeCharCode(
-          ((charCode - 97 + key[keyIndex % key.length].toLowerCase().codeUnitAt(0) - 97) % 26) + 97
-        );
-        keyIndex++;
-      } else { // Non-alphabetic characters
-        ciphertext.writeCharCode(charCode);
+  static final List<List<String>> _vigenereTable = _buildVigenereTable();
+
+  static List<List<String>> _buildVigenereTable() {
+    List<List<String>> table = List.generate(26, (_) => List.filled(26, ''));
+    for (int i = 0; i < 26; i++) {
+      for (int j = 0; j < 26; j++) {
+        table[i][j] = String.fromCharCode(((i + j) % 26) + 65); // A-Z
       }
     }
+    return table;
+  }
+
+  static String encrypt(String plaintext, String key) {
+    StringBuffer ciphertext = StringBuffer();
+    key = key.toUpperCase();
+    int keyIndex = 0;
+
+    for (int i = 0; i < plaintext.length; i++) {
+      String char = plaintext[i];
+      if (_isLetter(char)) {
+        bool isLower = _isLowerCase(char);
+        int row = key.codeUnitAt(keyIndex % key.length) - 65;
+        int col = char.toUpperCase().codeUnitAt(0) - 65;
+        String cipherChar = _vigenereTable[row][col];
+        ciphertext.write(isLower ? cipherChar.toLowerCase() : cipherChar);
+        keyIndex++;
+      } else {
+        ciphertext.write(char);
+      }
+    }
+
     return ciphertext.toString();
   }
 
   static String decrypt(String ciphertext, String key) {
     StringBuffer plaintext = StringBuffer();
+    key = key.toUpperCase();
     int keyIndex = 0;
-    
+
     for (int i = 0; i < ciphertext.length; i++) {
-      int charCode = ciphertext.codeUnitAt(i);
-      if (charCode >= 65 && charCode <= 90) { // Uppercase letters
-        plaintext.writeCharCode(
-          ((charCode - 65 - (key[keyIndex % key.length].toUpperCase().codeUnitAt(0) - 65) + 26) % 26) + 65
-        );
+      String char = ciphertext[i];
+      if (_isLetter(char)) {
+        bool isLower = _isLowerCase(char);
+        int row = key.codeUnitAt(keyIndex % key.length) - 65;
+        String upperChar = char.toUpperCase();
+        int col = _vigenereTable[row].indexOf(upperChar);
+        String plainChar = String.fromCharCode(col + 65);
+        plaintext.write(isLower ? plainChar.toLowerCase() : plainChar);
         keyIndex++;
-      } else if (charCode >= 97 && charCode <= 122) { // Lowercase letters
-        plaintext.writeCharCode(
-          ((charCode - 97 - (key[keyIndex % key.length].toLowerCase().codeUnitAt(0) - 97) + 26) % 26) + 97
-        );
-        keyIndex++;
-      } else { // Non-alphabetic characters
-        plaintext.writeCharCode(charCode);
+      } else {
+        plaintext.write(char);
       }
     }
+
     return plaintext.toString();
+  }
+
+  static bool _isLetter(String ch) {
+    return RegExp(r'[a-zA-Z]').hasMatch(ch);
+  }
+
+  static bool _isLowerCase(String ch) {
+    return ch.codeUnitAt(0) >= 97 && ch.codeUnitAt(0) <= 122;
   }
 }

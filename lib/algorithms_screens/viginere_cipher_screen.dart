@@ -15,18 +15,32 @@ class _VigenereCipherScreenState extends State<VigenereCipherScreen> {
   bool _hasResult = false;
 
   void _processText() {
-    final text = _textController.text;
-    final key = _keyController.text;
+  final text = _textController.text.trim();
+  final key = _keyController.text.trim();
 
-    if (text.isEmpty || key.isEmpty) return;
-
+  if (text.isEmpty || key.isEmpty) {
     setState(() {
-      _resultText = _isEncrypting
-          ? 'Encrypted: ${VigenereCipher.encrypt(text, key)}'
-          : 'Decrypted: ${VigenereCipher.decrypt(text, key)}';
-      _hasResult = true;
+      _resultText = 'Please enter both text and key.';
+      _hasResult = false;
     });
+    return;
   }
+
+  if (!RegExp(r'^[a-zA-Z]+$').hasMatch(key)) {
+    setState(() {
+      _resultText = 'Error: Key must contain only letters (A-Z, a-z).';
+      _hasResult = false;
+    });
+    return;
+  }
+
+  setState(() {
+    _resultText = _isEncrypting
+        ? 'Encrypted: ${VigenereCipher.encrypt(text, key)}'
+        : 'Decrypted: ${VigenereCipher.decrypt(text, key)}';
+    _hasResult = true;
+  });
+}
 
   void _toggleMode() {
     setState(() {

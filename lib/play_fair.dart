@@ -2,36 +2,42 @@ import 'dart:collection';
 
 class PlayfairCipher {
   // Generate 5x5 matrix using keyword
-static List<List<String>> generateMatrix(String keyword) {
-  String alphabet = 'ABCDEFGHIKLMNOPQRSTUVWXYZ'; // J is merged with I
+ static List<List<String>> generateMatrix(String keyword) {
+  String alphabet = 'ABCDEFGHIKLMNOPQRSTUVWXYZ'; // 'J' is excluded
   LinkedHashSet<String> uniqueLetters = LinkedHashSet<String>();
 
-  // Step 1: Add unique letters from the keyword (replace J with I)
+  // Process keyword: treat J as I, uppercase, and skip duplicates
   for (int i = 0; i < keyword.length; i++) {
     String letter = keyword[i].toUpperCase();
     if (letter == 'J') letter = 'I';
-    uniqueLetters.add(letter);
+    if (!uniqueLetters.contains(letter) && alphabet.contains(letter)) {
+      uniqueLetters.add(letter);
+    }
   }
 
-  // Step 2: Add remaining letters from the alphabet that are not in the keyword
+  // Add remaining letters from the alphabet
   for (int i = 0; i < alphabet.length; i++) {
-    uniqueLetters.add(alphabet[i]);
+    String letter = alphabet[i];
+    if (!uniqueLetters.contains(letter)) {
+      uniqueLetters.add(letter);
+    }
   }
 
-  // Step 3: Generate the 5x5 matrix from the unique letters
+  // Now build the matrix from exactly 25 characters
   List<List<String>> matrix = [];
-  List<String> row = [];
+  List<String> temp = [];
 
   for (String letter in uniqueLetters) {
-    row.add(letter);
-    if (row.length == 5) {
-      matrix.add(row);
-      row = [];
+    temp.add(letter);
+    if (temp.length == 5) {
+      matrix.add(List.from(temp));
+      temp.clear();
     }
   }
 
   return matrix;
 }
+
 
 
   // Preprocess text: uppercase, remove non-letters, replace J with I, and pad with 'X' if needed
@@ -87,6 +93,7 @@ static List<List<String>> generateMatrix(String keyword) {
 
   // Decrypt using Playfair cipher
   static String decrypt(String ciphertext, String keyword) {
+    ciphertext = ciphertext.toUpperCase().replaceAll(RegExp(r'[^A-Z]'), '').replaceAll('J', 'I');
     List<List<String>> matrix = generateMatrix(keyword);
     StringBuffer plaintext = StringBuffer();
 

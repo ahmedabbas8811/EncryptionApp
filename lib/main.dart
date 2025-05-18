@@ -2,6 +2,7 @@ import 'package:encryption_app/algorithms_screens/one_time_pad_screen.dart';
 import 'package:encryption_app/algorithms_screens/playfair_screen.dart';
 import 'package:encryption_app/algorithms_screens/rail_fence_screen.dart';
 import 'package:encryption_app/algorithms_screens/row_column_screen.dart';
+import 'package:encryption_app/algorithms_screens/rsa_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:encryption_app/algorithms_screens/caesar_cipher_screen.dart';
 import 'package:encryption_app/algorithms_screens/viginere_cipher_screen.dart';
@@ -90,6 +91,9 @@ class _EncryptionScreenState extends State<EncryptionScreen> {
       case 'Rail Fence Cipher':
         algorithmWidget = RailFenceCipherScreen();
         break;
+      case 'RSA':
+        algorithmWidget = RSAScreen();
+        break;
 
       default:
         algorithmWidget = const Center(child: Text('Select an algorithm.'));
@@ -147,6 +151,13 @@ class _EncryptionScreenState extends State<EncryptionScreen> {
                 DropdownMenuEntry(
                   value: 'Rail Fence Cipher',
                   label: 'Rail Fence Cipher',
+                  style: ButtonStyle(
+                    foregroundColor: MaterialStatePropertyAll(Colors.white),
+                  ),
+                ),
+                DropdownMenuEntry(
+                  value: 'RSA',
+                  label: 'RSA',
                   style: ButtonStyle(
                     foregroundColor: MaterialStatePropertyAll(Colors.white),
                   ),

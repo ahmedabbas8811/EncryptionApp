@@ -1,5 +1,3 @@
-import 'dart:math';
-
 class RSA {
   int? p, q, n, phi, e, d;
   late int k;

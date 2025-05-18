@@ -1,3 +1,4 @@
+import 'package:encryption_app/algorithms_screens/affine_cipher_screen.dart';
 import 'package:encryption_app/algorithms_screens/one_time_pad_screen.dart';
 import 'package:encryption_app/algorithms_screens/playfair_screen.dart';
 import 'package:encryption_app/algorithms_screens/rail_fence_screen.dart';
@@ -94,6 +95,9 @@ class _EncryptionScreenState extends State<EncryptionScreen> {
       case 'RSA':
         algorithmWidget = RSAScreen();
         break;
+      case 'Affine Cipher':
+        algorithmWidget = AffineScreen();
+        break;
 
       default:
         algorithmWidget = const Center(child: Text('Select an algorithm.'));
@@ -158,6 +162,13 @@ class _EncryptionScreenState extends State<EncryptionScreen> {
                 DropdownMenuEntry(
                   value: 'RSA',
                   label: 'RSA',
+                  style: ButtonStyle(
+                    foregroundColor: MaterialStatePropertyAll(Colors.white),
+                  ),
+                ),
+                DropdownMenuEntry(
+                  value: 'Affine Cipher',
+                  label: 'Affine Cipher',
                   style: ButtonStyle(
                     foregroundColor: MaterialStatePropertyAll(Colors.white),
                   ),

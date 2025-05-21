@@ -4,6 +4,7 @@ import 'package:encryption_app/algorithms_screens/playfair_screen.dart';
 import 'package:encryption_app/algorithms_screens/rail_fence_screen.dart';
 import 'package:encryption_app/algorithms_screens/row_column_screen.dart';
 import 'package:encryption_app/algorithms_screens/rsa_screen.dart';
+import 'package:encryption_app/algorithms_screens/sha_hashing_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:encryption_app/algorithms_screens/caesar_cipher_screen.dart';
 import 'package:encryption_app/algorithms_screens/viginere_cipher_screen.dart';
@@ -98,6 +99,9 @@ class _EncryptionScreenState extends State<EncryptionScreen> {
       case 'Affine Cipher':
         algorithmWidget = AffineScreen();
         break;
+      case 'SHA-256':
+        algorithmWidget = Sha256HashScreen();
+        break;
 
       default:
         algorithmWidget = const Center(child: Text('Select an algorithm.'));
@@ -169,6 +173,13 @@ class _EncryptionScreenState extends State<EncryptionScreen> {
                 DropdownMenuEntry(
                   value: 'Affine Cipher',
                   label: 'Affine Cipher',
+                  style: ButtonStyle(
+                    foregroundColor: MaterialStatePropertyAll(Colors.white),
+                  ),
+                ),
+                DropdownMenuEntry(
+                  value: 'SHA-256',
+                  label: 'SHA-256',
                   style: ButtonStyle(
                     foregroundColor: MaterialStatePropertyAll(Colors.white),
                   ),
